@@ -39,7 +39,6 @@ const defaultConfig = {
 
 export async function GET(request) {
   try {
-    // Essayer d'obtenir la configuration depuis les headers, sinon utiliser la config par défaut
     let config
     try {
       config = getDbConfig(request)

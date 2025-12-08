@@ -109,6 +109,7 @@ class AppointmentService {
     const response = await fetch(`${this.baseUrl}/practitioners`)
     
     if (!response.ok) {
+      console.log(`Erreur ${response}`)
       throw new Error(`Erreur ${response.status}: ${response.statusText}`)
     }
 
@@ -120,6 +121,7 @@ class AppointmentService {
     const response = await fetch(`${this.baseUrl}/patients${params}`)
     
     if (!response.ok) {
+      console.log(`Erreur ${response}`)
       throw new Error(`Erreur ${response.status}: ${response.statusText}`)
     }
 

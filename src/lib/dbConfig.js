@@ -1,57 +1,43 @@
-// Configuration globale pour la base de données
-let globalDbConfig = null;
+export const getDefaultConfig = () => ({
+  user: process.env.DB_DEFAULT_USER || "sa",
+  password: process.env.DB_DEFAULT_PASSWORD || "",
+  server: process.env.DB_DEFAULT_SERVER || "localhost\\ATX",
+  database: process.env.DB_DEFAULT_DATABASE || "DentAdmin",
+  port: parseInt(process.env.DB_DEFAULT_PORT || "1433"),
+  options: {
+    trustServerCertificate: process.env.DB_DEFAULT_TRUST_SERVER_CERTIFICATE === "true",
+    encrypt: process.env.DB_DEFAULT_ENCRYPT === "true",
+    enableArithAbort: true,
+  },
+});
 
-export function setGlobalDbConfig(config) {
-  globalDbConfig = config;
-}
-
-export function getGlobalDbConfig() {
-  return globalDbConfig;
-}
-
-export function isDbConfigured() {
-  return globalDbConfig !== null && 
-         globalDbConfig.user && 
-         globalDbConfig.password && 
-         globalDbConfig.server && 
-         globalDbConfig.database;
-}
-
-// Configuration par défaut
-export const defaultDbConfig = {
-  user: "sa",
-  password: "",
-  server: "localhost\\ATX",
-  database: "DentAdmin",
-  port: 1433,
-  trustServerCertificate: true,
-  encrypt: false,
-};
-
-// Utilitaire pour créer la configuration SQL
-export function createSqlConfig(config = globalDbConfig) {
-  if (!config) {
-    throw new Error('Configuration de base de données non définie');
+export function getDbConfig(request) {
+  const dbConfigHeader = request.headers.get('x-db-config')
+  if (!dbConfigHeader) {
+    throw new Error('Configuration de base de données manquante')
   }
-
+  
+  const dbConfig = JSON.parse(dbConfigHeader)
+  
   return {
-    user: config.user,
-    password: config.password,
-    server: config.server,
-    database: config.database,
-    port: config.port || 1433,
+    user: dbConfig.user,
+    password: dbConfig.password,
+    server: dbConfig.server,
+    database: dbConfig.database,
+    port: dbConfig.port || 1433,
     options: {
-      encrypt: config.encrypt || false,
-      trustServerCertificate: config.trustServerCertificate !== false,
+      encrypt: dbConfig.encrypt || false,
+      trustServerCertificate: dbConfig.trustServerCertificate !== false,
       enableArithAbort: true,
     },
-    pool: {
-      max: 10,
-      min: 0,
-      idleTimeoutMillis: 30000,
-      acquireTimeoutMillis: 60000,
-    },
-    requestTimeout: 30000,
-    connectionTimeout: 15000,
-  };
+  }
+}
+
+export function getConfig(request) {
+  try {
+    return getDbConfig(request)
+  } catch (err) {
+    console.warn('Configuration dynamique non trouvée, utilisation de la configuration par défaut:', err.message)
+    return getDefaultConfig()
+  }
 }

@@ -1,20 +1,18 @@
+import { getDbConfig, getDefaultConfig } from "@/lib/dbConfig";
 import sql from "mssql";
 
-const config = {
-  user: "sa",                // Ton user SQL Server
-  password: "Messi1234@!",  // Ton password SQL
-  server: "localhost\\ATX",       // Using localhost instead of machine name
-  database: "DentAdmin",
-  port: 1433,
-  options: {
-    trustServerCertificate: true,
-    encrypt: false,           // Disable encryption for local development
-    enableArithAbort: true,   // Required for certain SQL Server versions
-  },
-};
-
 export async function GET() {
+  
   try {
+    let config
+    try {
+      // config = getDbConfig(request)
+      // const config = getDefaultConfig();
+      config = getDefaultConfig();
+    } catch (err) {
+      console.warn('Configuration dynamique non trouvée, utilisation de la configuration par défaut:', err.message)
+      config = getDefaultConfig()
+    }    
     const pool = await sql.connect(config);
 
     const result = await pool.request().query(`

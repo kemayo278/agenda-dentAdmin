@@ -60,9 +60,9 @@ export default function Home() {
     )
   }
 
-  if (!isConfigured) {
-    return <ConfigPage onConfigured={handleConfigured} />
-  }
+  // if (!isConfigured) {
+  //   return <ConfigPage onConfigured={handleConfigured} />
+  // }
 
   return <AppointmentsList onReconfigure={handleReconfigure} />
 }

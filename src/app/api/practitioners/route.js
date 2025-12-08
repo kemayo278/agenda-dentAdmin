@@ -1,52 +1,17 @@
 import sql from "mssql";
-
-// Fonction pour obtenir la configuration depuis les headers
-function getDbConfig(request) {
-  const dbConfigHeader = request.headers.get('x-db-config')
-  if (!dbConfigHeader) {
-    throw new Error('Configuration de base de données manquante')
-  }
-  
-  const dbConfig = JSON.parse(dbConfigHeader)
-  
-  return {
-    user: dbConfig.user,
-    password: dbConfig.password,
-    server: dbConfig.server,
-    database: dbConfig.database,
-    port: dbConfig.port || 1433,
-    options: {
-      encrypt: dbConfig.encrypt || false,
-      trustServerCertificate: dbConfig.trustServerCertificate !== false,
-      enableArithAbort: true,
-    },
-  }
-}
-
-// Configuration par défaut (fallback)
-const defaultConfig = {
-  user: "sa",
-  password: "Messi1234@!",
-  server: "localhost\\ATX",
-  database: "DentAdmin",
-  port: 1433,
-  options: {
-    trustServerCertificate: true,
-    encrypt: false,
-    enableArithAbort: true,
-  },
-};
+import { getDbConfig, getDefaultConfig } from "@/lib/dbConfig";
 
 export async function GET(request) {
   try {
-    // Essayer d'obtenir la configuration depuis les headers, sinon utiliser la config par défaut
     let config
     try {
-      config = getDbConfig(request)
+      // config = getDbConfig(request)
+      // const config = getDefaultConfig();
+      config = getDefaultConfig();
     } catch (err) {
       console.warn('Configuration dynamique non trouvée, utilisation de la configuration par défaut:', err.message)
-      config = defaultConfig
-    }
+      config = getDefaultConfig()
+    } 
     
     const pool = await sql.connect(config);
 

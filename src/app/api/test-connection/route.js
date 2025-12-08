@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
 import sql from 'mssql'
+import { getDefaultConfig } from '@/lib/dbConfig'
 
 export async function POST(req) {
   try {
-    const { user, password, server, database, port, trustServerCertificate, encrypt } = await req.json()
+    const configData = await req.json()
 
     // Validation des paramètres requis
-    if (!user || !password || !server || !database) {
+    if (!configData.user || !configData.password || !configData.server || !configData.database) {
       return NextResponse.json(
         { success: false, error: 'Paramètres de connexion manquants' },
         { status: 400 }
@@ -15,14 +16,14 @@ export async function POST(req) {
 
     // Configuration de connexion
     const config = {
-      user: user,
-      password: password,
-      server: server,
-      database: database,
-      port: port || 1433,
+      user: configData.user,
+      password: configData.password,
+      server: configData.server,
+      database: configData.database,
+      port: configData.port || 1433,
       options: {
-        encrypt: encrypt || false,
-        trustServerCertificate: trustServerCertificate !== false,
+        encrypt: configData.encrypt || false,
+        trustServerCertificate: configData.trustServerCertificate !== false,
         enableArithAbort: true,
       },
       pool: {
@@ -32,7 +33,7 @@ export async function POST(req) {
         acquireTimeoutMillis: 10000,
       },
       requestTimeout: 10000,
-      connectionTimeout: 10000,
+      // connectionTimeout: 10000,
     }
 
     let pool
@@ -59,8 +60,8 @@ export async function POST(req) {
         success: true,
         message: 'Connexion réussie',
         details: {
-          server: server,
-          database: database,
+          server: configData.server,
+          database: configData.database,
           tablesFound: foundTables,
           connectionTime: new Date().toISOString()
         }
@@ -90,8 +91,8 @@ export async function POST(req) {
           error: errorMessage,
           details: {
             code: connectionError.code,
-            server: server,
-            database: database
+            server: configData.server,
+            database: configData.database
           }
         },
         { status: 500 }

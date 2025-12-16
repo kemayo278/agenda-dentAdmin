@@ -38,12 +38,12 @@ const appointmentTypes = [
   { id: "radio", label: "Radio panoramique", color: "#0EA5E9" },
 ]
 
-const practitioners = [
-  { id: "ah", name: "Achat Halopian", initials: "AH", color: "#EC4899" },
-  { id: "ak", name: "Ana Kahlaoui", initials: "AK", color: "#FBBF24" },
-  { id: "kj", name: "Kamal J", initials: "KJ", color: "#10B981" },
-  { id: "nb", name: "Berman Nate", initials: "NB", color: "#A855F7" },
-]
+// const practitioners = [
+//   { id: "ah", name: "Achat Halopian", initials: "AH", color: "#EC4899" },
+//   { id: "ak", name: "Ana Kahlaoui", initials: "AK", color: "#FBBF24" },
+//   { id: "kj", name: "Kamal J", initials: "KJ", color: "#10B981" },
+//   { id: "nb", name: "Berman Nate", initials: "NB", color: "#A855F7" },
+// ]
 
 interface Appointment {
   id: number
@@ -57,7 +57,6 @@ interface Appointment {
   hasPhone: boolean
   hasDocument: boolean
   status: "confirmed" | "pending" | "cancelled" | "completed" | "urgent"
-  // Données supplémentaires de l'API
   startDateTime?: string
   endDateTime?: string
   patientId?: number

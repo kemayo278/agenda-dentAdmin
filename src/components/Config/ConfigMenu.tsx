@@ -27,7 +27,6 @@ export function ConfigMenu({ onReconfigure }: ConfigMenuProps) {
   const [showConfirm, setShowConfirm] = useState(false)
 
   const handleReconfigure = () => {
-    // Supprimer la configuration sauvegardée
     localStorage.removeItem('db-config')
     setShowConfirm(false)
     onReconfigure()

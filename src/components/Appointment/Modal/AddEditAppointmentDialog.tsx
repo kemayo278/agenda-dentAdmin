@@ -441,7 +441,7 @@ export default function AddEditAppointmentDialog({
                 >
                   Fermer
                 </Button>
-                <Button 
+                {/* <Button 
                   type="button" 
                   variant="outline" 
                   onClick={() => setViewMode("edit")}
@@ -460,7 +460,7 @@ export default function AddEditAppointmentDialog({
                     <Trash2 className="w-4 h-4 mr-2" />
                     Supprimer
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
           </div>
